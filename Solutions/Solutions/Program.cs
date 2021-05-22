@@ -1,7 +1,16 @@
-﻿using System;
+﻿using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
 
 class Solution
 {
@@ -46,22 +55,22 @@ class Solution
         }
     }
 
-    static void PrintSinglyLinkedList(SinglyLinkedListNode node, string sep, TextWriter textWriter)
+    static void PrintSinglyLinkedList(SinglyLinkedListNode node, string sep)
     {
         while (node != null)
         {
-            textWriter.Write(node.data);
+            Console.Write(node.data);
 
             node = node.next;
 
             if (node != null)
             {
-                textWriter.Write(sep);
+                Console.Write(sep);
             }
         }
     }
 
-    // Complete the CompareLists function below.
+    // Complete the mergeLists function below.
 
     /*
      * For your reference:
@@ -72,23 +81,59 @@ class Solution
      * }
      *
      */
-    static bool CompareLists(SinglyLinkedListNode head1, SinglyLinkedListNode head2)
+    static SinglyLinkedListNode mergeLists(SinglyLinkedListNode head1, SinglyLinkedListNode head2)
     {
-        var result = true;
+        SinglyLinkedList merge = new SinglyLinkedList();
 
-        while (head1 != null && head2 != null)
+        while(head1 != null && head2 != null)
         {
-            if (head1.data != head2.data)
-                return false;
+            if(head1.data == head2.data)
+            {
+                merge.InsertNode(head1.data);
+                merge.InsertNode(head2.data);
 
-            head1 = head1.next;
-            head2 = head2.next;
+                head1 = head1.next;
+                head2 = head2.next;
+            }
+            else if(head1.data < head2.data)
+            {
+                merge.InsertNode(head1.data);
+
+                head1 = head1.next;
+            }
+            else if (head2.data < head1.data)
+            {
+                merge.InsertNode(head2.data);
+
+                head2 = head2.next;
+            }
+            else if(head1 == null)
+            {
+                merge.InsertNode(head1.data);
+
+                head1 = head1.next;
+            }
+            else if (head2 == null)
+            {
+                merge.InsertNode(head2.data);
+
+                head2 = head2.next;
+            }
         }
 
-        if (head1 != null || head2 != null)
-            return false;
+        if((head1 == null && head2 != null) || (head1 != null && head2 == null))
+        {
+            var temp = head1 == null ? head2 : head1;
 
-        return result;
+            while(temp != null)
+            {
+                merge.InsertNode(temp.data);
+
+                temp = temp.next;
+            }
+        }
+
+        return merge.head;
     }
 
     static void Main(string[] args)
@@ -118,9 +163,10 @@ class Solution
                 llist2.InsertNode(llist2Item);
             }
 
-            bool result = CompareLists(llist1.head, llist2.head);
+            SinglyLinkedListNode llist3 = mergeLists(llist1.head, llist2.head);
 
-            Console.WriteLine((result ? 1 : 0));
+            PrintSinglyLinkedList(llist3, " ");
+            Console.WriteLine();
         }
     }
 }
