@@ -70,102 +70,68 @@ class Solution
         }
     }
 
-    // Complete the mergeLists function below.
-
-    /*
-     * For your reference:
-     *
-     * SinglyLinkedListNode {
-     *     int data;
-     *     SinglyLinkedListNode next;
-     * }
-     *
-     */
-    static SinglyLinkedListNode mergeLists(SinglyLinkedListNode head1, SinglyLinkedListNode head2)
+    class Result
     {
-        SinglyLinkedList merge = new SinglyLinkedList();
 
-        while(head1 != null && head2 != null)
+        /*
+         * Complete the 'removeDuplicates' function below.
+         *
+         * The function is expected to return an INTEGER_SINGLY_LINKED_LIST.
+         * The function accepts INTEGER_SINGLY_LINKED_LIST llist as parameter.
+         */
+
+        /*
+         * For your reference:
+         *
+         * SinglyLinkedListNode
+         * {
+         *     int data;
+         *     SinglyLinkedListNode next;
+         * }
+         *
+         */
+
+        public static SinglyLinkedListNode removeDuplicates(SinglyLinkedListNode llist)
         {
-            if(head1.data == head2.data)
-            {
-                merge.InsertNode(head1.data);
-                merge.InsertNode(head2.data);
+            SinglyLinkedListNode temp = llist;
 
-                head1 = head1.next;
-                head2 = head2.next;
-            }
-            else if(head1.data < head2.data)
+            while (temp != null)
             {
-                merge.InsertNode(head1.data);
-
-                head1 = head1.next;
+                if(temp.next != null && temp.data == temp.next.data)
+                {
+                    temp.next = temp.next.next != null ? temp.next.next : null;
+                    temp = temp.next;
+                }
+                else
+                {
+                    temp = temp.next;
+                }
             }
-            else if (head2.data < head1.data)
-            {
-                merge.InsertNode(head2.data);
 
-                head2 = head2.next;
-            }
-            else if(head1 == null)
-            {
-                merge.InsertNode(head1.data);
-
-                head1 = head1.next;
-            }
-            else if (head2 == null)
-            {
-                merge.InsertNode(head2.data);
-
-                head2 = head2.next;
-            }
+            return llist;
         }
 
-        if((head1 == null && head2 != null) || (head1 != null && head2 == null))
-        {
-            var temp = head1 == null ? head2 : head1;
-
-            while(temp != null)
-            {
-                merge.InsertNode(temp.data);
-
-                temp = temp.next;
-            }
-        }
-
-        return merge.head;
     }
 
     static void Main(string[] args)
     {
+        int t = Convert.ToInt32(Console.ReadLine());
 
-        int tests = Convert.ToInt32(Console.ReadLine());
-
-        for (int testsItr = 0; testsItr < tests; testsItr++)
+        for (int tItr = 0; tItr < t; tItr++)
         {
-            SinglyLinkedList llist1 = new SinglyLinkedList();
+            SinglyLinkedList llist = new SinglyLinkedList();
 
-            int llist1Count = Convert.ToInt32(Console.ReadLine());
+            int llistCount = Convert.ToInt32(Console.ReadLine());
 
-            for (int i = 0; i < llist1Count; i++)
+            for (int i = 0; i < llistCount; i++)
             {
-                int llist1Item = Convert.ToInt32(Console.ReadLine());
-                llist1.InsertNode(llist1Item);
+                int llistItem = Convert.ToInt32(Console.ReadLine());
+                llist.InsertNode(llistItem);
             }
 
-            SinglyLinkedList llist2 = new SinglyLinkedList();
+            SinglyLinkedListNode llist1 = Result.removeDuplicates(llist.head);
 
-            int llist2Count = Convert.ToInt32(Console.ReadLine());
-
-            for (int i = 0; i < llist2Count; i++)
-            {
-                int llist2Item = Convert.ToInt32(Console.ReadLine());
-                llist2.InsertNode(llist2Item);
-            }
-
-            SinglyLinkedListNode llist3 = mergeLists(llist1.head, llist2.head);
-
-            PrintSinglyLinkedList(llist3, " ");
+            PrintSinglyLinkedList(llist1, " ");
             Console.WriteLine();
         }
     }
