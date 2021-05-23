@@ -55,70 +55,61 @@ class Solution
         }
     }
 
-    static void PrintSinglyLinkedList(SinglyLinkedListNode node, string sep)
+    static void PrintSinglyLinkedList(SinglyLinkedListNode node, string sep, TextWriter textWriter)
     {
         while (node != null)
         {
-            Console.Write(node.data);
+            textWriter.Write(node.data);
 
             node = node.next;
 
             if (node != null)
             {
-                Console.Write(sep);
+                textWriter.Write(sep);
             }
         }
     }
 
-    class Result
+    // Complete the hasCycle function below.
+
+    /*
+     * For your reference:
+     *
+     * SinglyLinkedListNode {
+     *     int data;
+     *     SinglyLinkedListNode next;
+     * }
+     *
+     */
+    static bool hasCycle(SinglyLinkedListNode head)
     {
+        HashSet<SinglyLinkedListNode> nodeSet = new HashSet<SinglyLinkedListNode>();
 
-        /*
-         * Complete the 'removeDuplicates' function below.
-         *
-         * The function is expected to return an INTEGER_SINGLY_LINKED_LIST.
-         * The function accepts INTEGER_SINGLY_LINKED_LIST llist as parameter.
-         */
-
-        /*
-         * For your reference:
-         *
-         * SinglyLinkedListNode
-         * {
-         *     int data;
-         *     SinglyLinkedListNode next;
-         * }
-         *
-         */
-
-        public static SinglyLinkedListNode removeDuplicates(SinglyLinkedListNode llist)
+        while(head != null)
         {
-            SinglyLinkedListNode temp = llist;
-
-            while (temp != null)
+            if (nodeSet.Contains(head))
             {
-                if(temp.next != null && temp.data == temp.next.data)
-                {
-                    temp.next = temp.next.next != null ? temp.next.next : null;
-                    temp = temp.next;
-                }
-                else
-                {
-                    temp = temp.next;
-                }
+                return true;
             }
-
-            return llist;
+            else
+            {
+                nodeSet.Add(head);
+                head = head.next;
+            }
         }
 
+        return false;
     }
 
     static void Main(string[] args)
     {
-        int t = Convert.ToInt32(Console.ReadLine());
 
-        for (int tItr = 0; tItr < t; tItr++)
+        int tests = Convert.ToInt32(Console.ReadLine());
+
+        for (int testsItr = 0; testsItr < tests; testsItr++)
         {
+            int index = Convert.ToInt32(Console.ReadLine());
+
             SinglyLinkedList llist = new SinglyLinkedList();
 
             int llistCount = Convert.ToInt32(Console.ReadLine());
@@ -129,10 +120,27 @@ class Solution
                 llist.InsertNode(llistItem);
             }
 
-            SinglyLinkedListNode llist1 = Result.removeDuplicates(llist.head);
+            SinglyLinkedListNode extra = new SinglyLinkedListNode(-1);
+            SinglyLinkedListNode temp = llist.head;
 
-            PrintSinglyLinkedList(llist1, " ");
-            Console.WriteLine();
+            for (int i = 0; i < llistCount; i++)
+            {
+                if (i == index)
+                {
+                    extra = temp;
+                }
+
+                if (i != llistCount - 1)
+                {
+                    temp = temp.next;
+                }
+            }
+
+            temp.next = extra;
+
+            bool result = hasCycle(llist.head);
+
+            Console.WriteLine((result ? 1 : 0));
         }
     }
 }
