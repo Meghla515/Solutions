@@ -70,7 +70,25 @@ class Solution
         }
     }
 
-    // Complete the hasCycle function below.
+    static int Length(SinglyLinkedListNode node)
+    {
+        var len = 0;
+
+        if (node == null)
+        {
+            return 0;
+        }
+
+        while (node != null)
+        {
+            len++;
+            node = node.next;
+        }
+
+        return len;
+    }
+
+    // Complete the findMergeNode function below.
 
     /*
      * For your reference:
@@ -81,28 +99,33 @@ class Solution
      * }
      *
      */
-    static bool hasCycle(SinglyLinkedListNode head)
+    static int findMergeNode(SinglyLinkedListNode head1, SinglyLinkedListNode head2)
     {
-        HashSet<SinglyLinkedListNode> nodeSet = new HashSet<SinglyLinkedListNode>();
+        var len1 = Length(head1);
+        var len2 = Length(head2);
 
-        while(head != null)
+        var diff = len1 > len2 ? len1 - len2 : len2 - len1;
+
+        var travarse = len1 == len2 ? head1 : len1 > len2 ? head1 : head2;
+        var travarse2 = len1 == len2 ? head2 : len2 > len1 ? head1 : head2;
+
+        for (int i = 1; i <= diff; i++)
         {
-            if (nodeSet.Contains(head))
-            {
-                return true;
-            }
-            else
-            {
-                nodeSet.Add(head);
-                head = head.next;
-            }
+            travarse = travarse.next;
         }
 
-        return false;
+        while(travarse != travarse2)
+        {
+            travarse = travarse.next;
+            travarse2 = travarse2.next;
+        }
+
+        return travarse.data;
     }
 
     static void Main(string[] args)
     {
+
 
         int tests = Convert.ToInt32(Console.ReadLine());
 
@@ -110,37 +133,50 @@ class Solution
         {
             int index = Convert.ToInt32(Console.ReadLine());
 
-            SinglyLinkedList llist = new SinglyLinkedList();
+            SinglyLinkedList llist1 = new SinglyLinkedList();
 
-            int llistCount = Convert.ToInt32(Console.ReadLine());
+            int llist1Count = Convert.ToInt32(Console.ReadLine());
 
-            for (int i = 0; i < llistCount; i++)
+            for (int i = 0; i < llist1Count; i++)
             {
-                int llistItem = Convert.ToInt32(Console.ReadLine());
-                llist.InsertNode(llistItem);
+                int llist1Item = Convert.ToInt32(Console.ReadLine());
+                llist1.InsertNode(llist1Item);
             }
 
-            SinglyLinkedListNode extra = new SinglyLinkedListNode(-1);
-            SinglyLinkedListNode temp = llist.head;
+            SinglyLinkedList llist2 = new SinglyLinkedList();
 
-            for (int i = 0; i < llistCount; i++)
+            int llist2Count = Convert.ToInt32(Console.ReadLine());
+
+            for (int i = 0; i < llist2Count; i++)
             {
-                if (i == index)
-                {
-                    extra = temp;
-                }
+                int llist2Item = Convert.ToInt32(Console.ReadLine());
+                llist2.InsertNode(llist2Item);
+            }
 
-                if (i != llistCount - 1)
+            SinglyLinkedListNode ptr1 = llist1.head;
+            SinglyLinkedListNode ptr2 = llist2.head;
+
+            for (int i = 0; i < llist1Count; i++)
+            {
+                if (i < index)
                 {
-                    temp = temp.next;
+                    ptr1 = ptr1.next;
                 }
             }
 
-            temp.next = extra;
+            for (int i = 0; i < llist2Count; i++)
+            {
+                if (i != llist2Count - 1)
+                {
+                    ptr2 = ptr2.next;
+                }
+            }
 
-            bool result = hasCycle(llist.head);
+            ptr2.next = ptr1;
 
-            Console.WriteLine((result ? 1 : 0));
+            int result = findMergeNode(llist1.head, llist2.head);
+
+            Console.WriteLine(result);
         }
     }
 }
