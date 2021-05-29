@@ -15,24 +15,26 @@ using System;
 class Solution
 {
 
-    class SinglyLinkedListNode
+    class DoublyLinkedListNode
     {
         public int data;
-        public SinglyLinkedListNode next;
+        public DoublyLinkedListNode next;
+        public DoublyLinkedListNode prev;
 
-        public SinglyLinkedListNode(int nodeData)
+        public DoublyLinkedListNode(int nodeData)
         {
             this.data = nodeData;
             this.next = null;
+            this.prev = null;
         }
     }
 
-    class SinglyLinkedList
+    class DoublyLinkedList
     {
-        public SinglyLinkedListNode head;
-        public SinglyLinkedListNode tail;
+        public DoublyLinkedListNode head;
+        public DoublyLinkedListNode tail;
 
-        public SinglyLinkedList()
+        public DoublyLinkedList()
         {
             this.head = null;
             this.tail = null;
@@ -40,7 +42,7 @@ class Solution
 
         public void InsertNode(int nodeData)
         {
-            SinglyLinkedListNode node = new SinglyLinkedListNode(nodeData);
+            DoublyLinkedListNode node = new DoublyLinkedListNode(nodeData);
 
             if (this.head == null)
             {
@@ -49,134 +51,117 @@ class Solution
             else
             {
                 this.tail.next = node;
+                node.prev = this.tail;
             }
 
             this.tail = node;
         }
     }
 
-    static void PrintSinglyLinkedList(SinglyLinkedListNode node, string sep, TextWriter textWriter)
+    static void PrintDoublyLinkedList(DoublyLinkedListNode node, string sep)
     {
         while (node != null)
         {
-            textWriter.Write(node.data);
+            Console.Write(node.data);
 
             node = node.next;
 
             if (node != null)
             {
-                textWriter.Write(sep);
+                Console.Write(sep);
             }
         }
     }
 
-    static int Length(SinglyLinkedListNode node)
+    class Result
     {
-        var len = 0;
 
-        if (node == null)
+        /*
+         * Complete the 'sortedInsert' function below.
+         *
+         * The function is expected to return an INTEGER_DOUBLY_LINKED_LIST.
+         * The function accepts following parameters:
+         *  1. INTEGER_DOUBLY_LINKED_LIST llist
+         *  2. INTEGER data
+         */
+
+        /*
+         * For your reference:
+         *
+         * DoublyLinkedListNode
+         * {
+         *     int data;
+         *     DoublyLinkedListNode next;
+         *     DoublyLinkedListNode prev;
+         * }
+         *
+         */
+
+        public static DoublyLinkedListNode sortedInsert(DoublyLinkedListNode llist, int data)
         {
-            return 0;
+            DoublyLinkedListNode head = llist;
+
+            if (llist != null)
+            {
+              
+                while (llist.next != null && llist.data < data)
+                {
+                    llist = llist.next;
+                }
+
+                DoublyLinkedListNode temp = new DoublyLinkedListNode(data);
+                if(llist.next == null && llist.data <= data)
+                {
+                    llist.next = temp;
+                    temp.prev = llist;
+                }
+                else
+                {
+                    temp.next = llist;
+                    temp.prev = llist.prev;
+                    llist.prev = temp;
+                    if (llist.prev.prev != null)
+                    {
+                        llist.prev.prev.next = temp;
+                    }
+                    else return temp;
+                }
+            }
+            else
+            {
+                return new DoublyLinkedListNode(data);
+            }
+
+            return head;
         }
 
-        while (node != null)
-        {
-            len++;
-            node = node.next;
-        }
-
-        return len;
-    }
-
-    // Complete the findMergeNode function below.
-
-    /*
-     * For your reference:
-     *
-     * SinglyLinkedListNode {
-     *     int data;
-     *     SinglyLinkedListNode next;
-     * }
-     *
-     */
-    static int findMergeNode(SinglyLinkedListNode head1, SinglyLinkedListNode head2)
-    {
-        var len1 = Length(head1);
-        var len2 = Length(head2);
-
-        var diff = len1 > len2 ? len1 - len2 : len2 - len1;
-
-        var travarse = len1 == len2 ? head1 : len1 > len2 ? head1 : head2;
-        var travarse2 = len1 == len2 ? head2 : len2 > len1 ? head1 : head2;
-
-        for (int i = 1; i <= diff; i++)
-        {
-            travarse = travarse.next;
-        }
-
-        while(travarse != travarse2)
-        {
-            travarse = travarse.next;
-            travarse2 = travarse2.next;
-        }
-
-        return travarse.data;
     }
 
     static void Main(string[] args)
     {
+        
 
+        int t = Convert.ToInt32(Console.ReadLine());
 
-        int tests = Convert.ToInt32(Console.ReadLine());
-
-        for (int testsItr = 0; testsItr < tests; testsItr++)
+        for (int tItr = 0; tItr < t; tItr++)
         {
-            int index = Convert.ToInt32(Console.ReadLine());
+            DoublyLinkedList llist = new DoublyLinkedList();
 
-            SinglyLinkedList llist1 = new SinglyLinkedList();
+            int llistCount = Convert.ToInt32(Console.ReadLine());
 
-            int llist1Count = Convert.ToInt32(Console.ReadLine());
-
-            for (int i = 0; i < llist1Count; i++)
+            for (int i = 0; i < llistCount; i++)
             {
-                int llist1Item = Convert.ToInt32(Console.ReadLine());
-                llist1.InsertNode(llist1Item);
+                int llistItem = Convert.ToInt32(Console.ReadLine());
+                llist.InsertNode(llistItem);
             }
 
-            SinglyLinkedList llist2 = new SinglyLinkedList();
+            int data = Convert.ToInt32(Console.ReadLine());
 
-            int llist2Count = Convert.ToInt32(Console.ReadLine());
+            DoublyLinkedListNode llist1 = Result.sortedInsert(llist.head, data);
 
-            for (int i = 0; i < llist2Count; i++)
-            {
-                int llist2Item = Convert.ToInt32(Console.ReadLine());
-                llist2.InsertNode(llist2Item);
-            }
-
-            SinglyLinkedListNode ptr1 = llist1.head;
-            SinglyLinkedListNode ptr2 = llist2.head;
-
-            for (int i = 0; i < llist1Count; i++)
-            {
-                if (i < index)
-                {
-                    ptr1 = ptr1.next;
-                }
-            }
-
-            for (int i = 0; i < llist2Count; i++)
-            {
-                if (i != llist2Count - 1)
-                {
-                    ptr2 = ptr2.next;
-                }
-            }
-
-            ptr2.next = ptr1;
-
-            int result = findMergeNode(llist1.head, llist2.head);
-
-            Console.WriteLine(result);
+            PrintDoublyLinkedList(llist1, " ");
+            Console.WriteLine();
         }
+
     }
 }
