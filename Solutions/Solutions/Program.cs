@@ -55,17 +55,17 @@ class Solution
         }
     }
 
-    static void PrintSinglyLinkedList(SinglyLinkedListNode node, string sep, TextWriter textWriter)
+    static void PrintSinglyLinkedList(SinglyLinkedListNode node, string sep)
     {
         while (node != null)
         {
-            textWriter.Write(node.data);
+            Console.Write(node.data);
 
             node = node.next;
 
             if (node != null)
             {
-                textWriter.Write(sep);
+                Console.Write(sep);
             }
         }
     }
@@ -74,12 +74,10 @@ class Solution
     {
 
         /*
-         * Complete the 'getNode' function below.
+         * Complete the 'removeDuplicates' function below.
          *
-         * The function is expected to return an INTEGER.
-         * The function accepts following parameters:
-         *  1. INTEGER_SINGLY_LINKED_LIST llist
-         *  2. INTEGER positionFromTail
+         * The function is expected to return an INTEGER_SINGLY_LINKED_LIST.
+         * The function accepts INTEGER_SINGLY_LINKED_LIST llist as parameter.
          */
 
         /*
@@ -93,30 +91,33 @@ class Solution
          *
          */
 
-        public static int getNode(SinglyLinkedListNode llist, int positionFromTail)
+        public static SinglyLinkedListNode removeDuplicates(SinglyLinkedListNode llist)
         {
-            List<SinglyLinkedListNode> nodes = new List<SinglyLinkedListNode>();
+            SinglyLinkedListNode temp = llist;
 
-            while (llist != null)
+            while (temp != null)
             {
-                nodes.Add(llist);
-                llist = llist.next;
+                if (temp.next != null && temp.data == temp.next.data)
+                {
+                    temp.next = temp.next.next != null ? temp.next.next : null;
+                    //temp = temp.next;
+                }
+                else
+                {
+                    temp = temp.next;
+                }
             }
 
-            var pos = nodes.Count - positionFromTail - 1;
-
-            return nodes[pos].data;
+            return llist;
         }
 
     }
 
     static void Main(string[] args)
     {
+        int t = Convert.ToInt32(Console.ReadLine());
 
-
-        int tests = Convert.ToInt32(Console.ReadLine());
-
-        for (int testsItr = 0; testsItr < tests; testsItr++)
+        for (int tItr = 0; tItr < t; tItr++)
         {
             SinglyLinkedList llist = new SinglyLinkedList();
 
@@ -128,11 +129,10 @@ class Solution
                 llist.InsertNode(llistItem);
             }
 
-            int position = Convert.ToInt32(Console.ReadLine());
+            SinglyLinkedListNode llist1 = Result.removeDuplicates(llist.head);
 
-            int result = Result.getNode(llist.head, position);
-
-            Console.WriteLine(result);
+            PrintSinglyLinkedList(llist1, " ");
+            Console.WriteLine();
         }
 
     }
