@@ -15,26 +15,24 @@ using System;
 class Solution
 {
 
-    class DoublyLinkedListNode
+    class SinglyLinkedListNode
     {
         public int data;
-        public DoublyLinkedListNode next;
-        public DoublyLinkedListNode prev;
+        public SinglyLinkedListNode next;
 
-        public DoublyLinkedListNode(int nodeData)
+        public SinglyLinkedListNode(int nodeData)
         {
             this.data = nodeData;
             this.next = null;
-            this.prev = null;
         }
     }
 
-    class DoublyLinkedList
+    class SinglyLinkedList
     {
-        public DoublyLinkedListNode head;
-        public DoublyLinkedListNode tail;
+        public SinglyLinkedListNode head;
+        public SinglyLinkedListNode tail;
 
-        public DoublyLinkedList()
+        public SinglyLinkedList()
         {
             this.head = null;
             this.tail = null;
@@ -42,7 +40,7 @@ class Solution
 
         public void InsertNode(int nodeData)
         {
-            DoublyLinkedListNode node = new DoublyLinkedListNode(nodeData);
+            SinglyLinkedListNode node = new SinglyLinkedListNode(nodeData);
 
             if (this.head == null)
             {
@@ -51,24 +49,23 @@ class Solution
             else
             {
                 this.tail.next = node;
-                node.prev = this.tail;
             }
 
             this.tail = node;
         }
     }
 
-    static void PrintDoublyLinkedList(DoublyLinkedListNode node, string sep)
+    static void PrintSinglyLinkedList(SinglyLinkedListNode node, string sep, TextWriter textWriter)
     {
         while (node != null)
         {
-            Console.Write(node.data);
+            textWriter.Write(node.data);
 
             node = node.next;
 
             if (node != null)
             {
-                Console.Write(sep);
+                textWriter.Write(sep);
             }
         }
     }
@@ -77,75 +74,51 @@ class Solution
     {
 
         /*
-         * Complete the 'sortedInsert' function below.
+         * Complete the 'getNode' function below.
          *
-         * The function is expected to return an INTEGER_DOUBLY_LINKED_LIST.
+         * The function is expected to return an INTEGER.
          * The function accepts following parameters:
-         *  1. INTEGER_DOUBLY_LINKED_LIST llist
-         *  2. INTEGER data
+         *  1. INTEGER_SINGLY_LINKED_LIST llist
+         *  2. INTEGER positionFromTail
          */
 
         /*
          * For your reference:
          *
-         * DoublyLinkedListNode
+         * SinglyLinkedListNode
          * {
          *     int data;
-         *     DoublyLinkedListNode next;
-         *     DoublyLinkedListNode prev;
+         *     SinglyLinkedListNode next;
          * }
          *
          */
 
-        public static DoublyLinkedListNode sortedInsert(DoublyLinkedListNode llist, int data)
+        public static int getNode(SinglyLinkedListNode llist, int positionFromTail)
         {
-            DoublyLinkedListNode head = llist;
+            List<SinglyLinkedListNode> nodes = new List<SinglyLinkedListNode>();
 
-            if (llist != null)
+            while (llist != null)
             {
-              
-                while (llist.next != null && llist.data < data)
-                {
-                    llist = llist.next;
-                }
-
-                DoublyLinkedListNode temp = new DoublyLinkedListNode(data);
-                if(llist.next == null && llist.data <= data)
-                {
-                    llist.next = temp;
-                    temp.prev = llist;
-                }
-                else
-                {
-                    temp.next = llist;
-                    temp.prev = llist.prev;
-                    llist.prev = temp;
-                    if (llist.prev.prev != null)
-                    {
-                        llist.prev.prev.next = temp;
-                    }
-                    else return temp;
-                }
-            }
-            else
-            {
-                return new DoublyLinkedListNode(data);
+                nodes.Add(llist);
+                llist = llist.next;
             }
 
-            return head;
+            var pos = nodes.Count - positionFromTail - 1;
+
+            return nodes[pos].data;
         }
 
     }
 
     static void Main(string[] args)
     {
-        
 
-        int t = Convert.ToInt32(Console.ReadLine());
 
-        for (int tItr = 0; tItr < t; tItr++)
+        int tests = Convert.ToInt32(Console.ReadLine());
+
+        for (int testsItr = 0; testsItr < tests; testsItr++)
         {
-            DoublyLinkedList llist = new DoublyLinkedList();
+            SinglyLinkedList llist = new SinglyLinkedList();
 
             int llistCount = Convert.ToInt32(Console.ReadLine());
 
@@ -155,12 +128,11 @@ class Solution
                 llist.InsertNode(llistItem);
             }
 
-            int data = Convert.ToInt32(Console.ReadLine());
+            int position = Convert.ToInt32(Console.ReadLine());
 
-            DoublyLinkedListNode llist1 = Result.sortedInsert(llist.head, data);
+            int result = Result.getNode(llist.head, position);
 
-            PrintDoublyLinkedList(llist1, " ");
-            Console.WriteLine();
+            Console.WriteLine(result);
         }
 
     }
